@@ -17,7 +17,7 @@ class LRUCache:
     def __init__(self, limit=10):
         self.limit=limit
         self.dll=DoublyLinkedList()
-        self.storage={}
+        self.storage=dict()
         self.size=0
 
 
@@ -28,15 +28,15 @@ class LRUCache:
     key-value pair doesn't exist in the cache.
     """
     def get(self, key):
-        print('storage: ', self.storage)
-        print('dll: ', self.dll)
-        # print('HI!')
+        # pass
+        # print('storage: ', self.storage)
+        # print('dll: ', self.dll)
+        # # print('HI!')
         if key in self.storage:
-            value=self.storage[key]
-            
-
-            self.dll.move_to_end((key,value))
-            return value
+            node=self.storage[key]
+        
+            self.dll.move_to_end(node)
+            return node.value[1]
         return None
 
 
@@ -54,18 +54,21 @@ class LRUCache:
     """
     def set(self, key, value):
         #if the limit has been reached:
+        if key in self.storage:
+            node=self.storage[key]
+            self.dll.move_to_end(node)
+            return
+        
         if self.size == self.limit:
-            oldest=self.dll.head.value
-            k = oldest[0] #get the key from the head, assuming key/value is being stored as a tuple
-            del self.storage[k] #remove the key/value from the dict
+            oldest=self.dll.head.value 
+            del self.storage[oldest[0]] #remove the key/value from the dict
             self.dll.remove_from_head() #remove the oldest item from the head
             self.size-=1 #decrease the size by 1
  
-        #if key is in the cache, delete the node so you can over
-        if key in self.storage:
-            self.dll.delete((key,value))
-
+        # if key is in the cache, delete the node so you can over
+        
         self.storage[key]=value
         self.dll.add_to_tail((key,value))
-        print('is there a head?', self.dll.head.value)
+        print('is there a head value?', self.dll.head.value)
+        print('is there a head?', self.dll.head)
         self.size+=1
