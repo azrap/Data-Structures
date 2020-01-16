@@ -53,12 +53,13 @@ class LRUCache:
     the newly-specified value.
     """
     def set(self, key, value):
-        #if the limit has been reached:
+        
         if key in self.storage:
             node=self.storage[key]
             node.value=(key,value)
             self.dll.move_to_end(node)
             return
+        #if the limit has been reached:
         if self.size == self.limit:
             oldest=self.dll.head.value 
             del self.storage[oldest[0]] #remove the key/value from the dict
@@ -67,7 +68,6 @@ class LRUCache:
  
         # if key is in the cache, delete the node so you can over
         
-        self.storage[key]=value
         self.dll.add_to_tail((key,value))
         self.storage[key]=self.dll.tail
         print('is there a head value?', self.dll.head.value)
